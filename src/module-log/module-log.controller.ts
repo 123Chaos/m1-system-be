@@ -1,13 +1,41 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Query, Headers } from '@nestjs/common';
 import { ModuleLogService } from './module-log.service';
-import { CreateModuleLogDto } from './dto/create-module-log.dto';
-import { UpdateModuleLogDto } from './dto/update-module-log.dto';
+
+type Timestamp = number;
+
+interface Keyword {
+  type?: string;
+  operator?: string;
+  operateTime?: Timestamp;
+}
+
+interface ModuleLogList {
+  pageSize?: string;
+  pageNum?: string;
+  keyword?: Keyword;
+}
+
 @Controller('module-log')
 export class ModuleLogController {
   constructor(private readonly moduleLogService: ModuleLogService) {}
 
   @Get('list')
-  getList(@Query() query: object) {
-    return this.moduleLogService.getList(query);
+  getModuleLogList(@Query() query: ModuleLogList, @Headers() headers: any) {
+    const { token } = headers;
+
+    if (!this.moduleLogService.validateToken(token))
+      return this.moduleLogService.tokenError();
+
+    return this.moduleLogService.getModuleLogList(query);
+  }
+
+  @Get('detail')
+  getModuleLogDetail(@Headers() headers: any) {
+    const { token } = headers;
+
+    if (!this.moduleLogService.validateToken(token))
+      return this.moduleLogService.tokenError();
+
+    return this.moduleLogService.getModuleLogDetail(token);
   }
 }
