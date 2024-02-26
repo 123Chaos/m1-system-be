@@ -1,26 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  // 分页获取模型日志
+  setUserInfo(ctx: any) {
+    return {
+      code: 0,
+      data: ctx,
+      message: '',
+    };
   }
 
-  findAll() {
-    return `This action returns all user`;
+  // 校验token
+  validateToken(token: string) {
+    if (token) return true;
+    return false;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  // token错误
+  tokenError() {
+    return {
+      code: 500,
+      message: '请检查token',
+    };
   }
 }
