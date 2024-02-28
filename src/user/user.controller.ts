@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import { UserService } from './user.service';
 
 interface UserInfo {
@@ -12,5 +12,13 @@ export class UserController {
   @Post('center')
   setUserInfo(@Body() body: UserInfo) {
     this.userService.setUserInfo(body);
+  }
+
+  @Get('test')
+  test() {
+    return {
+      code: 0,
+      data: `()=>{console.log('worker!!')}`,
+    };
   }
 }
